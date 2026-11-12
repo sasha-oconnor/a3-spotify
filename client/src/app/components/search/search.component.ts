@@ -17,6 +17,8 @@ export class SearchComponent implements OnInit {
   searchCategory:string = 'artist';
   searchCategories:string[] = ['artist', 'album', 'track'];
   resources:ResourceData[];
+  //Category the current results were searched with, so switching the dropdown doesn't mismatch the display
+  resultsCategory:string;
 
   constructor(private spotifyService:SpotifyService) { }
 
@@ -25,6 +27,14 @@ export class SearchComponent implements OnInit {
 
   search() {
     //TODO: call search function in spotifyService and parse response
+    if(!this.searchString) {
+      return;
+    }
+    var category:string = this.searchCategory;
+    this.spotifyService.searchFor(category, this.searchString).then((data) => {
+      this.resources = data;
+      this.resultsCategory = category;
+    });
   }
 
 }
